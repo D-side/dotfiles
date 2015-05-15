@@ -1,12 +1,21 @@
-# Fancy object inspection
-require 'awesome_print'
+# Pry
+# An advanced Ruby REPL.
+# Recommended gems for your Gemfile:
+# * pry-coolline -- provides syntax highlighting for input string.
+# * pry-byebug -- integrates a Ruby 2.0+ debugger.
+# * pry-doc -- provides documentation and source code for Ruby standard library.
+#              Even provides C code for methods implemented natively.
+# * colorize -- several clean methods for coloring strings in the terminal
+# * awesome_print -- prints objects in a human-readable (more or less) format
 
-# Paging and awesome_print
+# Augments return value inspection by adding scrolling for long output
+# (via `less` under Linux) and beautiful formatting using awesome_print (.ai)
+require 'awesome_print'
 Pry.config.print = proc do |output, value|
   Pry::Helpers::BaseHelpers.stagger_output("=> #{value.ai(raw: true)}", output)
 end
 
-# Colorful prompt
+# A clean prompt with 3-symbol right-padded line numbers and nesting indication
 require 'colorize'
 Pry.prompt = [
   proc do |obj, nest_level, pry|
@@ -18,7 +27,9 @@ Pry.prompt = [
   end
 ]
 
-# Hitting Enter without a command will repeat last command: `next` in byebug?
+# For ease of debugging, hitting Enter will repeat the last entered command
+# This is so you don't type `next` and `step` all the time, even a single
+# character matters.
 Pry::Commands.command /^$/, "repeat last command" do
   _pry_.input = StringIO.new(Pry.history.to_a.last)
 end
