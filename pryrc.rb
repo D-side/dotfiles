@@ -4,7 +4,7 @@
 # * pry-coolline -- provides syntax highlighting for input string.
 # * pry-byebug -- integrates a Ruby 2.0+ debugger.
 # * pry-doc -- provides documentation and source code for Ruby standard library.
-#              Even provides C code for methods implemented natively.
+#              Even provides C code for methods implemented natively. Most of them.
 # * colorize -- several clean methods for coloring strings in the terminal
 # * awesome_print -- prints objects in a human-readable (more or less) format
 
@@ -32,4 +32,10 @@ Pry.prompt = [
 # character matters.
 Pry::Commands.command /^$/, "repeat last command" do
   _pry_.input = StringIO.new(Pry.history.to_a.last)
+end
+
+module Multitool
+  def in_all_encodings(string)
+    Encoding.list.map { |e| [e, (string.dup.force_encoding(e).encode(Encoding.default_external) rescue nil)] }.to_h
+  end
 end
